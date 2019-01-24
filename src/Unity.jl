@@ -87,6 +87,11 @@ function clear(socket::TCPSocket)
     return retval
 end
 
+function screenshot(socket::TCPSocket,filename::String)
+    retval = write(socket, filename*"UNITY_SCREENSHOT")
+    sleep(.1)
+    return retval
+end
 
 #Unity Pyramid mesh with c-like indices
 type PyramidMesh
