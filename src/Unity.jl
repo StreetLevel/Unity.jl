@@ -71,6 +71,12 @@ function clear(socket::TCPSocket)
     return retval
 end
 
+function screenshot(socket::TCPSocket,filename::String)
+    retval = write(socket, filename*"UNITY_SCREENSHOT")
+    sleep(.1)
+    return retval
+end
+
 mutable struct UnityCameraSettings
     id::String
     main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
