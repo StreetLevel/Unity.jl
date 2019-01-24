@@ -23,7 +23,8 @@ colormapdict = Dict{String,Vector{RGB{Float32}}}(
 	 "BlPu"		 =>  BlPu,
 	 "BkOr"   =>  BkOr,
 	 "GrBl" => GrBl,
-	 "distgclrs" => distgclrs)
+	 "distgclrs" => distgclrs,
+	 "YG" => YG)
 
 
 abstract AbstractColorMap
