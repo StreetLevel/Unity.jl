@@ -25,7 +25,9 @@ colormapdict = Dict{String,Vector{RGB{Float32}}}(
 	 "GrBl" => GrBl,
 	 "distgclrs" => distgclrs,
 	 "bone"		=>	bone,
-	 "bone_rev"		=>	reverse(bone))
+	 "bone_rev"		=>	reverse(bone),
+	 "YG" => YG)
+
 
 
 abstract type AbstractColorMap
