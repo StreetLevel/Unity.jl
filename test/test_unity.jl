@@ -16,10 +16,10 @@ colors = rand(RGBA{Float32},length(verts))
 #define optons
 options = ["surface_shader = flat"]
 transparent = ["surface_shader = transparent"]
-point_size = ["point_size = 0.05"]
+point_size = ["point_size = 0.5"]
 
 #define text
-unity_text = UnityText("Hello World!", Point3f0(1.5,2,0), Point3f0(0.1,0.1,.15), Point3f0(1,1,1))
+unity_text = UnityText("Hello World!", Point3f0(1.5,2,0), Point3f0(0.1,0.1,.15), Point3f0(1,1,1), rand(RGBA{Float32}))
 
 #create meshes
 surface_mesh = UnityMesh("Mesh 1", verts, Int32[], Int32[], surf_inds, colors, options, UnityText[unity_text])
