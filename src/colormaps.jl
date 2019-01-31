@@ -24,12 +24,16 @@ colormapdict = Dict{String,Vector{RGB{Float32}}}(
 	 "BkOr"   =>  BkOr,
 	 "GrBl" => GrBl,
 	 "distgclrs" => distgclrs,
+	 "bone"		=>	bone,
+	 "bone_rev"		=>	reverse(bone),
 	 "YG" => YG)
 
 
-abstract AbstractColorMap
 
-type ColorMap <: AbstractColorMap
+abstract type AbstractColorMap
+end
+
+mutable struct ColorMap <: AbstractColorMap
 	 map::Vector{RGB{Float32}}
 	 function ColorMap(str::String)
 		  clrmap = new()
@@ -38,7 +42,9 @@ type ColorMap <: AbstractColorMap
 	 end
 end
 
-type BoundedColorMap
+using Nullables
+
+mutable struct BoundedColorMap
 	 clrmap::ColorMap
 	 mindta::Nullable{Float32}
 	 maxdta::Nullable{Float32}
@@ -47,7 +53,7 @@ type BoundedColorMap
 	 end
 end
 
-type test
+mutable struct test
 	 x::Float32
 	 y::Nullable{Float32}
 end
@@ -59,7 +65,7 @@ function generate(colormap::Vector{RGB{Float32}},data::AbstractVector)
 	 return length(data) == length(clrs) ? clrs : vcat(map(i->(inds[i+1]-inds[i]) > 1 ? linspace(clrs[i],clrs[i+1],inds[i+1]-inds[i]) : clrs[i] ,1:(length(inds)-1))...)
 end
 
-import Base:mean
+import Statistics:mean
 function mean(clrs::Vector{RGB{Float32}})
 	 r,g,b,a = zeros(Float32,4)
 	 n = length(clrs)
@@ -72,7 +78,7 @@ function mean(clrs::Vector{RGB{Float32}})
 	 return RGB{Float32}(r,g,b)
 end
 
-type JetColorMap <: AbstractColorMap
+mutable struct JetColorMap <: AbstractColorMap
 	 map::Vector{RGBA{Float32}}
 	 function JetColorMap()
 		  cmap = Array(RGBA{Float32}, 256)
@@ -86,7 +92,7 @@ type JetColorMap <: AbstractColorMap
 	 end
 end
 
-type HSVColorMap <: AbstractColorMap
+mutable struct HSVColorMap <: AbstractColorMap
 	 map::Vector{RGBA{Float32}}
 	 function HSVColorMap()
 		  return new(linspace(Colors.HSV(0,1,1),Colors.HSV(330,1,1),256))

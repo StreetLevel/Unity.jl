@@ -3,27 +3,27 @@ import JSON
 import ColorTypes
 import ColorTypes: RGB, RGBA
 import Colors: weighted_color_mean
-import Base.TCPServer
 import GeometryTypes
 import GeometryTypes: SimpleRectangle, Point3f0, Face
+import Sockets.TCPSocket
 
 include(joinpath("palette.jl"))
 include(joinpath("colormaps.jl"))
 
-type UnityVector3
+mutable struct UnityVector3
     x::Float32
     y::Float32
     z::Float32
 end
 
-type UnityColor
+mutable struct UnityColor
     r::Float32
     g::Float32
     b::Float32
     a::Float32
 end
 
-type UnityText
+mutable struct UnityText
     text::String
     pos::UnityVector3
     scale::UnityVector3
@@ -42,7 +42,7 @@ end
 #end
 
 #Unity mesh with c-like indexing
-type UnityMesh
+mutable struct UnityMesh
     id::String
     vertices::Vector{UnityVector3}
     points::Vector{UInt32}
@@ -65,7 +65,19 @@ function Base.write(socket::TCPSocket, um::UnityMesh)
     return retval
 end
 
-type UnityCameraSettings
+function clear(socket::TCPSocket)
+    retval = write(socket, "UNITY_RESET_ALL")
+    sleep(.1)
+    return retval
+end
+
+function screenshot(socket::TCPSocket,filename::String)
+    retval = write(socket, filename*"UNITY_SCREENSHOT")
+    sleep(.1)
+    return retval
+end
+
+mutable struct UnityCameraSettings
     id::String
     main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
     main_camera_rotation::Vector{UnityVector3}
@@ -81,12 +93,6 @@ function Base.write(socket::TCPSocket, ucs::UnityCameraSettings)
     return retval
 end
 
-function clear(socket::TCPSocket)
-    retval = write(socket, "UNITY_RESET_ALL")
-    sleep(.1)
-    return retval
-end
-
 function screenshot(socket::TCPSocket,filename::String)
     retval = write(socket, filename*"UNITY_SCREENSHOT")
     sleep(.1)
@@ -94,16 +100,15 @@ function screenshot(socket::TCPSocket,filename::String)
 end
 
 #Unity Pyramid mesh with c-like indices
-type PyramidMesh
+mutable struct PyramidMesh
     id::String
     vertices::Vector{UnityVector3}
     pyramids::Vector{UInt32}
     colors::Vector{ColorTypes.RGBA{Float32}}
-    options::Vector{String}
 end
 
 begin
-local const pattern = [ 0,2,1,0,3,2,2,3,1,0,1,3 ]
+local pattern = [ 0,2,1,0,3,2,2,3,1,0,1,3 ]
 function Base.convert(::Type{UnityMesh},msh::PyramidMesh,dublic_vert::Bool=false)
     if dublic_vert
         return convert_and_duplicate(UnityMesh,msh,pattern)
@@ -127,7 +132,7 @@ function Base.convert(::Type{UnityMesh},msh::PyramidMesh,pattern::Vector{Int})
             ]
             )
     end
-    return UnityMesh(msh.id,msh.vertices,UInt32[],UInt32[],triangles,msh.colors,msh.options)
+    return UnityMesh(msh.id,msh.vertices,UInt32[],UInt32[],triangles,msh.colors)
 end
 
 function convert_and_duplicate(::Type{UnityMesh},msh::PyramidMesh,pattern::Vector{Int})
@@ -157,7 +162,7 @@ function convert_and_duplicate(::Type{UnityMesh},msh::PyramidMesh,pattern::Vecto
 
     triangles = UInt32[i-1 for i = 1:length(vertices)]
 
-    return UnityMesh(id,vertices,points,lines,triangles,colors,msh.options)
+    return UnityMesh(id,vertices,points,lines,triangles,colors)
 
 end
 
@@ -221,14 +226,14 @@ function ColorBar(clrmap::BoundedColorMap)
 
     return vertices,faces,lines,colors,vals,b
 end
-
+import Printf.@sprintf
 function ColorBar(Id::String, clrmap::BoundedColorMap, alpha=0.4)
 
     vertices,faces,lines,colors,vals,b = ColorBar(clrmap)
     unity_vertices = map(x->UnityVector3(x[1]-8000,x[2]-8000,x[3]-105), vertices )
     unity_faces = vcat([[UInt32(x[1]),UInt32(x[2]),UInt32(x[3])] for x in faces]...)
     unity_colors = map(x->RGBA{Float32}(x.r,x.g,x.b,alpha),colors)
-    text = map((x,y)->UnityText(@sprintf("%.3e",x),y-GeometryTypes.Point3f0(7999.6,8000.1,105),UnityVector3(.1,.1,.05),UnityVector3(1,180,1)), vals,b)
+    text = map((x,y)->UnityText(@sprintf("%.3e",x),y-GeometryTypes.Point3f0(7999.6,8000.1,105),UnityVector3(.1,.1,.05),UnityVector3(1,180,1),RGBA{Float32}(0.0,0.0,0.0,1.0)), vals,b)
     #plot(ub,Id,unity_vertices,unity_faces,lines,unity_colors,ub.config[:wireframe_options],text)
     return UnityMesh(Id,unity_vertices,Int32[],Int32[],unity_faces,unity_colors,["surface_shader = transparent"],text)
 
