@@ -189,8 +189,8 @@ function ColorBar(clrmap::BoundedColorMap)
         push!(colors,cb)
         push!(colors,ca)
         push!(colors,cb)
-        flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
-        flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
+        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32,0}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
+        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32,0}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
         push!(lines,length(vertices)-4)
         push!(lines,length(vertices)-2)
         push!(lines,length(vertices)-3)
@@ -210,7 +210,7 @@ function ColorBar(clrmap::BoundedColorMap)
     clrmap = apply(clrmap.clrmap, convert( Vector{Float32}, vals ) )
     
 
-    faces = Face{3,UInt32}[]
+    faces = Face{3,UInt32,0}[]
     lines = UInt32[]
     vertices = Point3f0[]
     colors = Vector{RGBA{Float32}}()
