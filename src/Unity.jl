@@ -189,12 +189,18 @@ function ColorBar(clrmap::BoundedColorMap)
         push!(colors,cb)
         push!(colors,ca)
         push!(colors,cb)
-        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32,0}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
-        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32,0}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
-        push!(lines,length(vertices)-4)
-        push!(lines,length(vertices)-2)
+        #flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32,0}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
+        #flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32,0}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
+        #push!(lines,length(vertices)-4)
+        #push!(lines,length(vertices)-2)
+        #push!(lines,length(vertices)-3)
+        #push!(lines,length(vertices)-1)
+        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-3,length(vertices),length(vertices)-1)) : push!(faces,Face{3,UInt32,0}(length(vertices),length(vertices)-3,length(vertices)-1))
+        flip ? push!(faces,Face{3,UInt32,0}(length(vertices)-3,length(vertices)-2,length(vertices))) : push!(faces,Face{3,UInt32,0}(length(vertices)-2,length(vertices)-3,length(vertices)))
         push!(lines,length(vertices)-3)
         push!(lines,length(vertices)-1)
+        push!(lines,length(vertices)-2)
+        push!(lines,length(vertices))
     end
     
     offset = 0.
@@ -219,7 +225,7 @@ function ColorBar(clrmap::BoundedColorMap)
       add_verts_faces_color!(vertices,faces,lines,colors,a[i],a[i+1],b[i],b[i+1],clrmap[i],clrmap[i+1],false)
     end
 
-    return vertices,faces,lines,colors,vals,b
+    return vertices,faces,lines,reverse(colors),reverse(vals),b
 end
 
 function ColorBar(Id::String, clrmap::BoundedColorMap, alpha=0.4)
