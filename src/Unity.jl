@@ -16,6 +16,11 @@ type UnityVector3
     z::Float32
 end
 
+type UnityVector2
+    x::Float32
+    y::Float32
+end
+
 type UnityColor
     r::Float32
     g::Float32
@@ -65,11 +70,21 @@ function Base.write(socket::TCPSocket, um::UnityMesh)
     return retval
 end
 
+#type UnityCameraSettings
+#    id::String
+#    main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
+#    main_camera_rotation::Vector{UnityVector3}
+#    main_camera_scale::Vector{UnityVector3}
+#    background_color::Vector{UnityColor}
+#    perspective::Vector{Bool}
+#end
+
 type UnityCameraSettings
     id::String
-    main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
-    main_camera_rotation::Vector{UnityVector3}
-    main_camera_scale::Vector{UnityVector3}
+    lookAt::Vector{UnityVector3} #should be all vectors of length 0 or 1
+    sphereCoordinates::Vector{UnityVector2}
+    distance::Vector{Float32}
+    viewAxisRotation::Vector{Float32}
     background_color::Vector{UnityColor}
     perspective::Vector{Bool}
 end
