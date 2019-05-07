@@ -16,6 +16,11 @@ mutable struct UnityVector3
     z::Float32
 end
 
+mutable struct UnityVector2
+    x::Float32
+    y::Float32
+end
+
 mutable struct UnityColor
     r::Float32
     g::Float32
@@ -77,11 +82,21 @@ function screenshot(socket::TCPSocket,filename::String)
     return retval
 end
 
+#mutable struct UnityCameraSettings
+#    id::String
+#    main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
+#    main_camera_rotation::Vector{UnityVector3}
+#    main_camera_scale::Vector{UnityVector3}
+#    background_color::Vector{UnityColor}
+#    perspective::Vector{Bool}
+#end
+
 mutable struct UnityCameraSettings
     id::String
-    main_camera_position::Vector{UnityVector3} #should be all vectors of length 0 or 1
-    main_camera_rotation::Vector{UnityVector3}
-    main_camera_scale::Vector{UnityVector3}
+    lookAt::Vector{UnityVector3} #should be all vectors of length 0 or 1
+    sphereCoordinates::Vector{UnityVector2}
+    distance::Vector{Float32}
+    viewAxisRotation::Vector{Float32}
     background_color::Vector{UnityColor}
     perspective::Vector{Bool}
 end
