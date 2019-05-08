@@ -66,7 +66,6 @@ end
 function Base.write(socket::TCPSocket, um::UnityMesh)
     jum = JSON.json(um)
     retval = write(socket, jum*"UNITY_MESH_JSON_FORMATTED")
-    sleep(.1)
     return retval
 end
 
@@ -92,19 +91,16 @@ end
 function Base.write(socket::TCPSocket, ucs::UnityCameraSettings)
     jum = JSON.json(ucs)
     retval = write(socket, jum*"UNITY_CAMERA_SETTINGS")
-    sleep(.1)
     return retval
 end
 
 function clear(socket::TCPSocket)
     retval = write(socket, "UNITY_RESET_ALL")
-    sleep(.1)
     return retval
 end
 
 function screenshot(socket::TCPSocket,filename::String)
     retval = write(socket, filename*"UNITY_SCREENSHOT")
-    sleep(.1)
     return retval
 end
 
