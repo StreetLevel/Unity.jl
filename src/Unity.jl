@@ -69,6 +69,12 @@ function clear(socket::TCPSocket)
     return retval
 end
 
+function clear(socket::TCPSocket, id::Int)
+    @assert 0 <= id <= 9
+    retval = write(socket, "UNITY_RESET_$id")
+    return retval
+end
+
 function screenshot(socket::TCPSocket,filename::String)
     retval = write(socket, filename*"UNITY_SCREENSHOT")
     return retval
@@ -104,7 +110,7 @@ function Base.convert(::Type{UnityMesh},msh::PyramidMesh,dublic_vert::Bool=false
         return convert_and_duplicate(UnityMesh,msh,pattern)
     else
         return convert(UnityMesh,msh,pattern)
-    end    
+    end
 end
 end
 
@@ -174,7 +180,7 @@ end
 
 
 function ColorBar(clrmap::BoundedColorMap)
-    
+
     add_verts_faces_color!(vertices,faces,lines,colors,a,b,c,d,ca,cb,flip) = begin
         push!(vertices,a) #0
         push!(vertices,b) #1
@@ -197,19 +203,19 @@ function ColorBar(clrmap::BoundedColorMap)
         push!(lines,length(vertices)-2)
         push!(lines,length(vertices))
     end
-    
+
     offset = 0.
     n = 10
-    
+
     rel = 10.
     sr = SimpleRectangle(0.,0.,rel,.5)
-    
+
     a = map(Point3f0,convert(Vector{Float64},linspace(0,sr.w,n)),repmat([offset+sr.h],n),repmat([0],n))
     b = map(Point3f0,convert(Vector{Float64},linspace(0,sr.w,n)),repmat([offset],n),repmat([0],n))
 
     vals = linspace(clrmap.mindta.value, clrmap.maxdta.value, n )
     clrmap = apply(clrmap.clrmap, convert( Vector{Float32}, vals ) )
-    
+
 
     faces = Face{3,UInt32}[]
     lines = UInt32[]
