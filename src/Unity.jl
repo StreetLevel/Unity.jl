@@ -51,10 +51,11 @@ mutable struct UnityMesh
     colors::Vector{UnityColor}
     options::Vector{String}
     text::Vector{UnityText}
+    visible::Vector{Bool}
 end
 
-function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector)
-    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[])
+function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector, visible=Bool[false])
+    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[],visible)
 end
 
 
