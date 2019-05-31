@@ -56,11 +56,12 @@ type UnityMesh
     colors::Vector{UnityColor}
     options::Vector{String}
     text::Vector{UnityText}
+    visible::Vector{Bool}
 end
 
-function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector)
-    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[])
-end
+#function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector)
+#    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[])
+#end
 
 
 function Base.write(socket::TCPSocket, um::UnityMesh)
