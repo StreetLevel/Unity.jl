@@ -59,8 +59,9 @@ mutable struct UnityMesh
     visible::Vector{Bool}
 end
 
-#function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector)
-#    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[])
+
+#function UnityMesh(id::String, vertices::Vector, points::Vector,  lines::Vector, triangles::Vector, colors::Vector, options::Vector, visible=Bool[false])
+#    return UnityMesh(id,vertices,points,lines,triangles,colors,options,UnityText[],visible)
 #end
 
 
@@ -108,6 +109,7 @@ end
 function Base.write(socket::TCPSocket, ucs::UnityCameraSettings)
     jum = JSON.json(ucs)
     retval = write(socket, jum*"UNITY_CAMERA_SETTINGS")
+
     return retval
 end
 
@@ -211,12 +213,18 @@ function ColorBar(clrmap::BoundedColorMap)
         push!(colors,cb)
         push!(colors,ca)
         push!(colors,cb)
-        flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
-        flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
-        push!(lines,length(vertices)-4)
-        push!(lines,length(vertices)-2)
+        #flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-1,length(vertices)-2)) : push!(faces,Face{3,UInt32}(length(vertices)-1,length(vertices)-4,length(vertices)-2))
+        #flip ? push!(faces,Face{3,UInt32}(length(vertices)-4,length(vertices)-3,length(vertices)-1)) : push!(faces,Face{3,UInt32}(length(vertices)-3,length(vertices)-4,length(vertices)-1))
+        #push!(lines,length(vertices)-4)
+        #push!(lines,length(vertices)-2)
+        #push!(lines,length(vertices)-3)
+        #push!(lines,length(vertices)-1)
+        flip ? push!(faces,Face{3,UInt32}(length(vertices)-3,length(vertices),length(vertices)-1)) : push!(faces,Face{3,UInt32}(length(vertices),length(vertices)-3,length(vertices)-1))
+        flip ? push!(faces,Face{3,UInt32}(length(vertices)-3,length(vertices)-2,length(vertices))) : push!(faces,Face{3,UInt32}(length(vertices)-2,length(vertices)-3,length(vertices)))
         push!(lines,length(vertices)-3)
         push!(lines,length(vertices)-1)
+        push!(lines,length(vertices)-2)
+        push!(lines,length(vertices))
     end
 
     offset = 0.
