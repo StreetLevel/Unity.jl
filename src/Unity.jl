@@ -113,10 +113,10 @@ function Base.write(socket::TCPSocket, ucs::UnityCameraSettings)
     return retval
 end
 
-function screenshot(socket::TCPSocket,filename::String)
-    retval = write(socket, filename*"UNITY_SCREENSHOT")
-    return retval
-end
+#function screenshot(socket::TCPSocket,filename::String)
+#    retval = write(socket, filename*"UNITY_SCREENSHOT")
+#    return retval
+#end
 
 #Unity Pyramid mesh with c-like indices
 mutable struct PyramidMesh
