@@ -54,8 +54,8 @@ mutable struct BoundedColorMap
 end
 
 
-import Statistics.mean
-function mean(clrs::Vector{RGB{Float32}})
+#import Statistics.mean
+function _mean(clrs::Vector{RGB{Float32}})
 	 r,g,b,a = zeros(Float32,4)
 	 n = length(clrs)
 	 for clr in clrs
@@ -69,7 +69,7 @@ end
 
 function generate(colormap::Vector{RGB{Float32}},data::AbstractVector)
 	 inds = map(x->Int(floor(x)),linspace(1,length(data),length(colormap)))
-	 clrs = map(mean,map(x->colormap[find(y->y==x,inds)],unique(inds)))
+	 clrs = map(_mean,map(x->colormap[find(y->y==x,inds)],unique(inds)))
 	 inds[1] += sum(map(i->inds[i+1]-inds[i],1:(length(inds)-1)))-length(data)
 	 return length(data) == length(clrs) ? clrs : vcat(map(i->(inds[i+1]-inds[i]) > 1 ? linspace(clrs[i],clrs[i+1],inds[i+1]-inds[i]) : clrs[i] ,1:(length(inds)-1))...)
 end
